@@ -1,17 +1,18 @@
 package bankingApp.controller;
 
+
 import bankingApp.model.RequestConfirmation;
 import bankingApp.model.Transaction;
 import bankingApp.model.User;
 import bankingApp.repository.ITransactionsRepository;
 import bankingApp.repository.IUserRepository;
 import bankingApp.utility.AccountNumberGenerator;
-import bankingApp.utility.Logger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController()
 public class RestApiController {
@@ -33,6 +34,7 @@ public class RestApiController {
         return loginUserConfirmation(user);
     }
 
+
     @PostMapping("bankingApp/accountInfo")
     public User user(@RequestBody User user){
         return getUserInfo(user);
@@ -44,7 +46,7 @@ public class RestApiController {
     }
 
     @PostMapping("bankingApp/getTransactions")
-    public ArrayList<Transaction> getTransactions(@RequestBody User user){
+    public List<Transaction> getTransactions(@RequestBody User user){
        return getTransactionsFromDb(user);
     }
 
@@ -103,12 +105,10 @@ public class RestApiController {
         return new RequestConfirmation(false,"Transaction failed");
     }
 
-    private ArrayList<Transaction> getTransactionsFromDb(User user){
-        ArrayList<Transaction> transactions = new ArrayList<>();
+    private List<Transaction> getTransactionsFromDb(User user){
+        List<Transaction> transactions = new ArrayList<>();
         try {
-            System.out.println(user.getAccNumber());
-            transactions = transactionsRepository.getTransactions(user.getAccNumber());
-            System.out.println(transactions);
+            transactions = transactionsRepository.getTransactions(user.getAccount_number());
             return transactions;
         }catch (Exception e){
             e.printStackTrace();

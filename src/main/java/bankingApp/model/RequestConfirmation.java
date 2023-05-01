@@ -1,10 +1,13 @@
 package bankingApp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class RequestConfirmation implements Serializable {
-    //This class is used to confirm if request was successful or not , if not it provides error message
+    @SerializedName("success")
     private boolean success;
+    @SerializedName("error")
     private String error;
 
     public RequestConfirmation(boolean success, String error) {
@@ -19,12 +22,12 @@ public class RequestConfirmation implements Serializable {
         return success;
     }
 
-    public String getError() {
-        return error;
-    }
-
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public String getError() {
+        return error;
     }
 
     public void setError(String error) {

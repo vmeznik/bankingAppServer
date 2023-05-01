@@ -1,22 +1,15 @@
 package bankingApp.model;
 
+import com.google.gson.annotations.SerializedName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+
 @Entity
 @Table(name = "users", schema = "public")
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public class User implements Serializable {
     @Column(name = "name")
     private String name;
@@ -25,10 +18,62 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
     @Id
+    @SerializedName("account_number")
     @Column(name = "account_number")
-    private int accNumber;
+    private int account_number;
     @Column(name = "balance")
     private double balance;
+
+    public User(String name, String password, String email, int account_number, double balance) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.account_number = account_number;
+        this.balance = balance;
+    }
+
+    public User() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getAccount_number() {
+        return account_number;
+    }
+
+    public void setAccount_number(int account_number) {
+        this.account_number = account_number;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 
     @Override
     public String toString() {
@@ -36,7 +81,7 @@ public class User implements Serializable {
                 "name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", accNumber=" + accNumber +
+                ", accNumber=" + account_number +
                 ", balance=" + balance +
                 '}';
     }
