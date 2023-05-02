@@ -21,7 +21,7 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
     void addUser(@Param("nameReq") String name,
                  @Param("passwordReq") String password,
                  @Param("emailReq") String email,
-                 @Param("accNumberReq") int accNumber,
+                 @Param("accNumberReq") String accNumber,
                  @Param("balanceReq") double balance);
 
 
@@ -32,7 +32,7 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
     ArrayList<User> emailExists(String email);
 
     @Query(value = "SELECT * FROM users WHERE account_number = ?1", nativeQuery = true)
-    ArrayList<User> accNumberExists(int accountNumber);
+    ArrayList<User> accNumberExists(String accountNumber);
 
     @Query(value = "SELECT * FROM users WHERE name = ?1 AND password = ?2", nativeQuery = true)
     User loginUser(String name, String password);
@@ -40,8 +40,8 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Modifying
     @Query(value = "UPDATE users SET balance = ?1 WHERE account_number = ?2" , nativeQuery = true)
-    void changeBalance(double amount, int accountNumber);
+    void changeBalance(double amount, String accountNumber);
 
     @Query(value = "SELECT * FROM users WHERE account_number = ?1" , nativeQuery = true)
-    User getUserByAccountNumber(int accountNumber);
+    User getUserByAccountNumber(String accountNumber);
 }

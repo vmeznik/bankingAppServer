@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +100,11 @@ public class RestApiController {
             userRepository.changeBalance((sender.getBalance() - transaction.getAmount()),transaction.getSenderAccNumber());
             userRepository.changeBalance((receiver.getBalance() + transaction.getAmount()),transaction.getReceiverAccNumber());
 
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            String currentDateTimeString = currentDateTime.format(formatter);
+
+            transaction.setDate(currentDateTimeString);
             transactionsRepository.save(transaction);
 
             return new RequestConfirmation(true,null);
@@ -116,8 +123,8 @@ public class RestApiController {
         return transactions;
     }
 
-    private int createAccNumber(){
-        int accNumber = AccountNumberGenerator.generateNumber();
+    private String createAccNumber(){
+        String accNumber = AccountNumberGenerator.generateNumber();
         while (!userRepository.accNumberExists(accNumber).isEmpty()){
             accNumber = AccountNumberGenerator.generateNumber();
         }

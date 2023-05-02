@@ -17,7 +17,7 @@ public interface ITransactionsRepository extends JpaRepository<Transaction,Integ
 
     @Query(value = "SELECT * FROM transactions WHERE ( senders_acc_number = ?1 OR receivers_acc_number = ?1 )",
             nativeQuery = true)
-    ArrayList<Transaction> getTransactions(int sender);
+    ArrayList<Transaction> getTransactions(String sender);
 
 
 }

@@ -20,11 +20,11 @@ public class User implements Serializable {
     @Id
     @SerializedName("account_number")
     @Column(name = "account_number")
-    private int account_number;
+    private String account_number;
     @Column(name = "balance")
     private double balance;
 
-    public User(String name, String password, String email, int account_number, double balance) {
+    public User(String name, String password, String email, String account_number, double balance) {
         this.name = name;
         this.password = password;
         this.email = email;
@@ -59,11 +59,11 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public int getAccount_number() {
+    public String getAccount_number() {
         return account_number;
     }
 
-    public void setAccount_number(int account_number) {
+    public void setAccount_number(String account_number) {
         this.account_number = account_number;
     }
 
