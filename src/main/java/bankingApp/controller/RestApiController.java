@@ -38,26 +38,26 @@ public class RestApiController {
 
 
     @PostMapping("bankingApp/accountInfo")
-    public User user(@RequestBody User user){
+    public User user(@RequestBody User user) {
         return getUserInfo(user);
     }
 
     @PostMapping("bankingApp/sendMoney")
-    public RequestConfirmation sendMoney(@RequestBody Transaction transaction){
+    public RequestConfirmation sendMoney(@RequestBody Transaction transaction) {
         return sendMoneyConfirmation(transaction);
     }
 
     @PostMapping("bankingApp/getTransactions")
-    public List<Transaction> getTransactions(@RequestBody User user){
-       return getTransactionsFromDb(user);
+    public List<Transaction> getTransactions(@RequestBody User user) {
+        return getTransactionsFromDb(user);
     }
 
 
     private RequestConfirmation loginUserConfirmation(User user) {
-        if (userRepository.loginUser(user.getName(), user.getPassword())== null){
-            return new RequestConfirmation(false,"Wrong username or password");
-        }else {
-            return new RequestConfirmation(true,null);
+        if (userRepository.loginUser(user.getName(), user.getPassword()) == null) {
+            return new RequestConfirmation(false, "Wrong username or password");
+        } else {
+            return new RequestConfirmation(true, null);
         }
     }
 
@@ -71,7 +71,7 @@ public class RestApiController {
             }
             userRepository.addUser(
                     user.getName(), user.getPassword(), user.getEmail(),
-                    createAccNumber(),10000);
+                    createAccNumber(), 10000);
         } catch (Exception e) {
             e.printStackTrace();
             return new RequestConfirmation(false, "User was not registered");
@@ -79,10 +79,10 @@ public class RestApiController {
         return new RequestConfirmation(true, null);
     }
 
-    private User getUserInfo(User user){
+    private User getUserInfo(User user) {
         User userInfo;
         try {
-            userInfo = userRepository.loginUser(user.getName(),user.getPassword());
+            userInfo = userRepository.loginUser(user.getName(), user.getPassword());
             return userInfo;
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,15 +90,15 @@ public class RestApiController {
         return null;
     }
 
-    private RequestConfirmation sendMoneyConfirmation(Transaction transaction){
+    private RequestConfirmation sendMoneyConfirmation(Transaction transaction) {
         if (!userRepository.accNumberExists(transaction.getSenderAccNumber()).isEmpty() &&
-        !userRepository.accNumberExists(transaction.getReceiverAccNumber()).isEmpty()){
+                !userRepository.accNumberExists(transaction.getReceiverAccNumber()).isEmpty()) {
 
             User sender = userRepository.getUserByAccountNumber(transaction.getSenderAccNumber());
             User receiver = userRepository.getUserByAccountNumber(transaction.getReceiverAccNumber());
 
-            userRepository.changeBalance((sender.getBalance() - transaction.getAmount()),transaction.getSenderAccNumber());
-            userRepository.changeBalance((receiver.getBalance() + transaction.getAmount()),transaction.getReceiverAccNumber());
+            userRepository.changeBalance((sender.getBalance() - transaction.getAmount()), transaction.getSenderAccNumber());
+            userRepository.changeBalance((receiver.getBalance() + transaction.getAmount()), transaction.getReceiverAccNumber());
 
             LocalDateTime currentDateTime = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -107,25 +107,25 @@ public class RestApiController {
             transaction.setDate(currentDateTimeString);
             transactionsRepository.save(transaction);
 
-            return new RequestConfirmation(true,null);
+            return new RequestConfirmation(true, null);
         }
-        return new RequestConfirmation(false,"Transaction failed");
+        return new RequestConfirmation(false, "Transaction failed");
     }
 
-    private List<Transaction> getTransactionsFromDb(User user){
+    private List<Transaction> getTransactionsFromDb(User user) {
         List<Transaction> transactions = new ArrayList<>();
         try {
             transactions = transactionsRepository.getTransactions(user.getAccount_number());
             return transactions;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return transactions;
     }
 
-    private String createAccNumber(){
+    private String createAccNumber() {
         String accNumber = AccountNumberGenerator.generateNumber();
-        while (!userRepository.accNumberExists(accNumber).isEmpty()){
+        while (!userRepository.accNumberExists(accNumber).isEmpty()) {
             accNumber = AccountNumberGenerator.generateNumber();
         }
         return accNumber;

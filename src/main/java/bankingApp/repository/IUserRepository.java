@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 @Repository
 public interface IUserRepository extends JpaRepository<User, Integer> {
@@ -39,9 +39,9 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE users SET balance = ?1 WHERE account_number = ?2" , nativeQuery = true)
+    @Query(value = "UPDATE users SET balance = ?1 WHERE account_number = ?2", nativeQuery = true)
     void changeBalance(double amount, String accountNumber);
 
-    @Query(value = "SELECT * FROM users WHERE account_number = ?1" , nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE account_number = ?1", nativeQuery = true)
     User getUserByAccountNumber(String accountNumber);
 }
