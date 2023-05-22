@@ -7,6 +7,7 @@ import bankingApp.model.User;
 import bankingApp.repository.ITransactionsRepository;
 import bankingApp.repository.IUserRepository;
 import bankingApp.utility.AccountNumberGenerator;
+import bankingApp.utility.Logger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,8 +56,10 @@ public class RestApiController {
 
     private RequestConfirmation loginUserConfirmation(User user) {
         if (userRepository.loginUser(user.getName(), user.getPassword()) == null) {
+            Logger.getInstance().log(user + " tried to log in , but wasnt confirmed");
             return new RequestConfirmation(false, "Wrong username or password");
         } else {
+            Logger.getInstance().log(user + " logged in");
             return new RequestConfirmation(true, null);
         }
     }
@@ -64,16 +67,20 @@ public class RestApiController {
     private RequestConfirmation registerUserConfirmation(User user) {
         try {
             if (!userRepository.nameExists(user.getName()).isEmpty()) {
+                Logger.getInstance().log(user + " tried to register , but wasnt confirmed");
                 return new RequestConfirmation(false, "Username already exists");
             }
             if (!userRepository.emailExists(user.getEmail()).isEmpty()) {
+                Logger.getInstance().log(user + " tried to register , but wasnt confirmed");
                 return new RequestConfirmation(false, "Email already exists");
             }
             userRepository.addUser(
                     user.getName(), user.getPassword(), user.getEmail(),
                     createAccNumber(), 10000);
+            Logger.getInstance().log(user + " was registered");
         } catch (Exception e) {
             e.printStackTrace();
+            Logger.getInstance().log(user + " tried to register , but wasnt confirmed");
             return new RequestConfirmation(false, "User was not registered");
         }
         return new RequestConfirmation(true, null);
@@ -107,8 +114,11 @@ public class RestApiController {
             transaction.setDate(currentDateTimeString);
             transactionsRepository.save(transaction);
 
+            Logger.getInstance().log(transaction + " was successful");
+
             return new RequestConfirmation(true, null);
         }
+        Logger.getInstance().log(transaction + " failed");
         return new RequestConfirmation(false, "Transaction failed");
     }
 
